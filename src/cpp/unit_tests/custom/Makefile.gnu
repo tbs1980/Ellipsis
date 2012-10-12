@@ -1,0 +1,7 @@
+CXX=g++
+
+CXXFLAGS=$(ADDITIONAL_CXXFLAGS) -I../../include -O3
+
+LDFLAGS=
+LIBS=
+
