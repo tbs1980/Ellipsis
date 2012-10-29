@@ -44,6 +44,7 @@ void read_csv_file(FILE* infile,unsigned long num_rows,
 void init_hanson_diag_data(hanson_data* diag_data,unsigned long num_dims,
 	double tol_min,double tol_max)
 {
+	unsigned long i;
 	diag_data->num_dims=num_dims;
 	diag_data->num_ents=0;
 	diag_data->keep_sampling=1;
@@ -58,6 +59,19 @@ void init_hanson_diag_data(hanson_data* diag_data,unsigned long num_dims,
 	diag_data->sum_x2=(double*)malloc(num_dims*sizeof(double));
 	diag_data->hanson=(double*)malloc(num_dims*sizeof(double));
 	diag_data->start_point=(double*)malloc(num_dims*sizeof(double));
+	
+	for(i=0;i<num_dims;++i)
+	{
+		diag_data->sum_x3dpsi[i]=0;
+		diag_data->sum_x2dpsi[i]=0;
+		diag_data->sum_x2dpsi[i]=0;
+		diag_data->sum_xdpsi[i]=0;
+		diag_data->sum_dpsi[i]=0;
+		diag_data->sum_x[i]=0;
+		diag_data->sum_x2[i]=0;
+		diag_data->hanson[i]=0;
+		diag_data->start_point[i]=0;
+	}
 }
 
 void free_hanson_diag_data(hanson_data* diag_data)
@@ -97,7 +111,7 @@ void push_state(hanson_data* diag_data,unsigned long num_dims,
 		/* accumulate */
 		diag_data->sum_x[i]+=xi;
 		diag_data->sum_x2[i]+=xi*xi;
-		diag_data->sum_dpsi[i]+=g[i];
+		diag_data->sum_dpsi[i]+=gi;
 		diag_data->sum_xdpsi[i]+=xi*gi;
 		diag_data->sum_x2dpsi[i]+=xi*xi*gi;
 		diag_data->sum_x3dpsi[i]+=xi*xi*xi*gi;

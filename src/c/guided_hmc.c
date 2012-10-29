@@ -31,6 +31,8 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 	int run_engine=1,run_ghs=1;
 	unsigned long count;
 	unsigned long iteration;
+	unsigned count_last_set;
+	unsigned iteration_last_set;
 	double* momentum;
 	double* proposal;
 	double* grad;
@@ -58,6 +60,7 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 	
 	/* init Hanson data */
 	init_hanson_diag_data(hdata,num_dim,0.8,1.2);
+	init_by_array(rand,init, length);
 	
 	/* assign the file names */
 	strcpy(diag_file_name,file_prefix);
@@ -119,6 +122,7 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 	else
 	{
 		printf("Starting sampling from scratch...\n");
+		init_genrand(rand,seed);
 		run_ghs=1;
 	}	
 	
@@ -133,8 +137,6 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 		resume_file_update_int=500;
 	}
 	
-	init_by_array(rand,init, length);
-	
 	/* run guided hmc */
 	if(run_ghs)
 	{
@@ -146,6 +148,9 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 		count=0;
 		iteration=0;
 		
+		count_last_set=0;
+		iteration_last_set=0;
+		
 		/* allocate memory*/
 		momentum=(double*)malloc(num_dim*sizeof(double));
 		proposal=(double*)malloc(num_dim*sizeof(double));
@@ -154,6 +159,7 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 		while(run_engine)
 		{
 			++iteration;
+			++iteration_last_set;
 			/* draw a momentum sample from N(0,1) */
 			for(i=0;i<num_dim;++i)
 			{
@@ -163,7 +169,7 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 			
 			/* randomise the trajectory */
 			uni_rand=genrand_uniform(rand);
-			num_steps=(unsigned int)(1+(1.-uni_rand)*(max_steps-1));
+			num_steps=1+(unsigned int)( (1.-uni_rand)*((double)max_steps-1.) );
 			epsilon=dim_scale_fact*uni_rand;
 			
 			/* Metropolis-Hastings */
@@ -186,9 +192,9 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 				for(i=0;i<num_dim;++i)
 				{
 					start_point[i]=proposal[i];
-					
 				}
 				++count;
+				++count_last_set;
 				
 				/* write feedback to the console */
 				if(feedback_int >0 && count>0 
@@ -196,8 +202,12 @@ void run_guided_hmc(unsigned long num_dim,double* start_point,
 				{
 					printf("\nNumber of samples drawn so far         = %ld\n",
 						hdata->num_ents);
-					printf("Acceptance rate                        = %f\n\n",
-						(double)count/(double)iteration);
+					printf("Acceptance rate (last %d samples)     = %f\n\n",
+						feedback_int,
+						(double)count_last_set/(double)iteration_last_set);
+						
+					count_last_set=0;
+					iteration_last_set=0;
 				}
 				
 				/* update resume files */
