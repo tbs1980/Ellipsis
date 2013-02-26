@@ -170,7 +170,6 @@ void write_diag_data_to_file(hanson_data* diag_data,const char* file_name)
 	write_csv_file(outfile,diag_data->num_dims,diag_data->sum_x2dpsi);
 	write_csv_file(outfile,diag_data->num_dims,diag_data->sum_xdpsi);
 	write_csv_file(outfile,diag_data->num_dims,diag_data->sum_dpsi);
-	write_csv_file(outfile,diag_data->num_dims,diag_data->sum_x2dpsi);
 	write_csv_file(outfile,diag_data->num_dims,num_samples);
 	write_csv_file(outfile,diag_data->num_dims,diag_data->hanson);
 	write_csv_file(outfile,diag_data->num_dims,mean);
@@ -211,23 +210,9 @@ int read_diag_data_from_file(hanson_data* diag_data,const char* file_name)
 			diag_data->sum_x2dpsi[i]=mat[4*ncols+i];
 			diag_data->sum_xdpsi[i]=mat[5*ncols+i];
 			diag_data->sum_dpsi[i]=mat[6*ncols+i];
-			diag_data->num_ents=(unsigned long)mat[8*ncols+i];			
+			diag_data->num_ents=(unsigned long)mat[7*ncols+i];
+			diag_data->hanson[i]=mat[8*ncols+i];
 			
-			/* check whether the chains have converged */
-			E_x=diag_data->sum_x[i]/(double)diag_data->num_ents;
-			E_x2=diag_data->sum_x2[i]/(double)diag_data->num_ents;
-			E_x3dpsi=diag_data->sum_x3dpsi[i]/(double)diag_data->num_ents;
-			E_x2dpsi=diag_data->sum_x2dpsi[i]/(double)diag_data->num_ents;
-			E_xdpsi=diag_data->sum_xdpsi[i]/(double)diag_data->num_ents;
-			E_dpsi=diag_data->sum_dpsi[i]/(double)diag_data->num_ents;
-			
-			/* calculate the two different version of the variance */
-			var1=E_x2-E_x*E_x;
-			var2=(E_x3dpsi-3.*E_x*E_x2dpsi+3.*E_x*E_x*E_xdpsi-
-				E_x*E_x*E_x*E_dpsi)/3.;
-			/* calculate Hanson's statistic */
-			diag_data->hanson[i]=var1/var2;
-		
 			/* if converged no more sampling required */
 			if(diag_data->hanson[i] < diag_data->tol_min || 
 				diag_data->hanson[i] > diag_data->tol_max)
