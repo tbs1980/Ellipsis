@@ -1,6 +1,7 @@
 BUILD=gnu
 #BUILD=open64
 #BUILD=intel
+#BUILD=suncc
 include Makefile.$(BUILD)
 
 AR = ar r
@@ -41,4 +42,7 @@ gamma_func.o:gamma_func.c
 inverse_gamma.o:inverse_gamma.c
 	$(CC) $(CFLAGS) -c $<
 clean:
-	rm -r *.o *.exe *.txt *.a $(BUILD) $(BUILD)
+	rm -r *.o *.exe *.txt *.a $(BUILD)
+	
+tidy:
+	rm *.o

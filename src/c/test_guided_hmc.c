@@ -70,7 +70,7 @@ int test_kinetic_energy()
 int test_guided_hmc()
 {
 
-	const unsigned long ndim=100;
+	const unsigned long ndim=1000;
 	double* st;
 	double* stp_sz;
 	void (*nlp)(unsigned long,double*,double*,double*);
