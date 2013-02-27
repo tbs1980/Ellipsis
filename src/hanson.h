@@ -13,8 +13,8 @@
 
 typedef struct
 {
-	unsigned long num_dims;
-	unsigned long num_ents;
+	int num_dims;
+	int num_ents;
 	int keep_sampling;
 	double tol_min;
 	double tol_max;
@@ -28,14 +28,14 @@ typedef struct
 	double* start_point;
 } hanson_data;
 
-void write_csv_file(FILE* outfile,unsigned long num_dims,double* vect);
-void read_csv_file(FILE* infile,unsigned long num_rows,
-	unsigned long num_cols,double* matrix);
+void write_csv_file(FILE* outfile,int num_dims,double* vect);
+void read_csv_file(FILE* infile,int num_rows,
+	int num_cols,double* matrix);
 
-void init_hanson_diag_data(hanson_data* diag_data,unsigned long num_dims,
+void init_hanson_diag_data(hanson_data* diag_data,int num_dims,
 	double tol_min,double tol_max);
 void free_hanson_diag_data(hanson_data* diag_data);
-void push_state(hanson_data* diag_data,unsigned long num_dims,
+void push_state(hanson_data* diag_data,int num_dims,
 	double* x, double* g);
 void write_diag_data_to_file(hanson_data* diag_data,const char* file_name);
 int read_diag_data_from_file(hanson_data* diag_data,const char* file_name);

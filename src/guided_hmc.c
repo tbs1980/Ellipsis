@@ -257,7 +257,7 @@ void run_guided_hmc(int num_dim,double* start_point,
 				if(feedback_int >0 && count>0 
 					&& count%feedback_int ==0)
 				{
-					printf("\nNumber of samples drawn so far         = %ld\n",
+					printf("\nNumber of samples drawn so far         = %d\n",
 						hdata->num_ents);
 					printf("Acceptance rate (last %d samples)     = %f\n\n",
 						feedback_int,
@@ -282,7 +282,7 @@ void run_guided_hmc(int num_dim,double* start_point,
 			}
 		}
 		printf("\nSampling finished!\n");
-		printf("Toal number of samples taken           = %lu\n",
+		printf("Toal number of samples taken           = %d\n",
 			hdata->num_ents);
 		printf("Net acceptance rate                    = %f\n",
 			(double)count/(double)iteration);
