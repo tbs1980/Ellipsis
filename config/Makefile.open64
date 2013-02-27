@@ -1,0 +1,9 @@
+CC=opencc
+FC=openf90
+CC_LANG_FLAGS=-std=c89
+CC_WARN_FLAGS=-Wall -Wsign-compare -Wuninitialized -Wunused-parameter
+CC_OPT_FLAGS=-O3 -fomit-frame-pointer
+CFLAGS=$(CC_LANG_FLAGS) $(CC_WARN_FLAGS) $(CC_OPT_FLAGS)
+FFLAGS=-Wall -O3
+LIBS=-lm
+
