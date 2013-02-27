@@ -1,8 +1,0 @@
-CC=c89
-CC_LANG_FLAGS=
-CC_WARN_FLAGS=-errfmt=error -errtags=yes
-CC_OPT_FLAGS=-xtarget=native -fast
-CFLAGS=$(CC_LANG_FLAGS) $(CC_WARN_FLAGS) $(CC_OPT_FLAGS)
-LDFLAGS=-library=sunperf
-LIBS=-lm
-
