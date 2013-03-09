@@ -211,14 +211,16 @@ void save_rand_state(ellipsis_mt19937_rng* rng,const char* filename)
 void read_rand_state(ellipsis_mt19937_rng* rng,const char* filename)
 {
 	FILE *outfile;
-	unsigned i;
+	unsigned i,info=0;
 	outfile=fopen(filename,"r");
 	
 	for(i=0;i<MT19937_N;++i)
 	{
-		fscanf(outfile,"%lu",&(rng->mt[i]));
+		info=fscanf(outfile,"%lu",&(rng->mt[i]));
 	}
-	fscanf(outfile,"%d",&(rng->mti));
+	info=fscanf(outfile,"%d",&(rng->mti));
+	
+	if(!info) printf("\nERROR in reading random number state\n");
 	
 	fclose(outfile);
 }

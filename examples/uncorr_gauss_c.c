@@ -58,7 +58,7 @@ int main()
 	scl_fct=1.;
 	fb_int=1000;
 	max_stp=10;
-	resume=0;
+	resume=1;
 	seed=1234;
 	
 	strcpy(ext_file_name,fl_pfx);

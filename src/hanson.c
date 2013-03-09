@@ -28,16 +28,18 @@ void write_csv_file(FILE* outfile,int num_dims,double* vect)
 void read_csv_file(FILE* infile,int num_rows,
 	int num_cols,double* matrix)
 {
-	int i,j;
+	int i,j,info=0;
 	
 	for(i=0;i<num_rows;++i)
 	{
 		for(j=0;j<num_cols-1;++j)
 		{
-			fscanf(infile,"%le,",&matrix[i*num_cols+j]);
+			info=fscanf(infile,"%le,",&matrix[i*num_cols+j]);
 		}
-		fscanf(infile,"%le\n",&matrix[i*num_cols+num_cols-1]);
+		info=fscanf(infile,"%le\n",&matrix[i*num_cols+num_cols-1]);
 	}
+	
+	if(!info) printf("@read_csv_file ERROR in file IO\n");
 }
 
 
@@ -89,59 +91,62 @@ void free_hanson_diag_data(hanson_data* diag_data)
 void push_state(hanson_data* diag_data,int num_dims,
 	double* x, double* g)
 {
-	int i,num_ents;
+	int i;
 	double xi,gi,E_x,E_x2,E_x3dpsi,E_x2dpsi,E_xdpsi,E_dpsi,var1,var2;
 	
 	assert(num_dims==diag_data->num_dims);
 	
 	/* increase the number of samples by 1 */
 	++(diag_data->num_ents);
-	num_ents=diag_data->num_ents;
 	
 	diag_data->keep_sampling=0;
 	
-	if(num_ents>1)/*if num_ents=1,var=var2=0 and hanson=inf*/
+	/* calculate the hanson statistic */
+	for(i=0;i<num_dims;++i)
 	{
-		/* calculate the hanson statistic */
-		for(i=0;i<num_dims;++i)
+		xi=x[i];
+		gi=g[i];
+	
+		/* set the start point */
+		diag_data->start_point[i]=xi;
+	
+		/* accumulate */
+		diag_data->sum_x[i]+=xi;
+		diag_data->sum_x2[i]+=xi*xi;
+		diag_data->sum_dpsi[i]+=gi;
+		diag_data->sum_xdpsi[i]+=xi*gi;
+		diag_data->sum_x2dpsi[i]+=xi*xi*gi;
+		diag_data->sum_x3dpsi[i]+=xi*xi*xi*gi;
+	
+		/* check for convergence */
+		E_x=diag_data->sum_x[i]/(double)diag_data->num_ents;
+		E_x2=diag_data->sum_x2[i]/(double)diag_data->num_ents;
+		E_dpsi=diag_data->sum_dpsi[i]/(double)diag_data->num_ents;
+		E_xdpsi=diag_data->sum_xdpsi[i]/(double)diag_data->num_ents;
+		E_x2dpsi=diag_data->sum_x2dpsi[i]/(double)diag_data->num_ents;
+		E_x3dpsi=diag_data->sum_x3dpsi[i]/(double)diag_data->num_ents;
+	
+		/* calculate the two different version of the variance */
+		var1=E_x2-E_x*E_x;
+		var2=(E_x3dpsi-3.*E_x*E_x2dpsi+3.*E_x*E_x*E_xdpsi-
+			E_x*E_x*E_x*E_dpsi)/3.;
+		
+		/* calculate Hanson's statistic */
+		if(var2>0)
 		{
-			xi=x[i];
-			gi=g[i];
-		
-			/* set the start point */
-			diag_data->start_point[i]=xi;
-		
-			/* accumulate */
-			diag_data->sum_x[i]+=xi;
-			diag_data->sum_x2[i]+=xi*xi;
-			diag_data->sum_dpsi[i]+=gi;
-			diag_data->sum_xdpsi[i]+=xi*gi;
-			diag_data->sum_x2dpsi[i]+=xi*xi*gi;
-			diag_data->sum_x3dpsi[i]+=xi*xi*xi*gi;
-		
-			/* check for convergence */
-			E_x=diag_data->sum_x[i]/(double)diag_data->num_ents;
-			E_x2=diag_data->sum_x2[i]/(double)diag_data->num_ents;
-			E_dpsi=diag_data->sum_dpsi[i]/(double)diag_data->num_ents;
-			E_xdpsi=diag_data->sum_xdpsi[i]/(double)diag_data->num_ents;
-			E_x2dpsi=diag_data->sum_x2dpsi[i]/(double)diag_data->num_ents;
-			E_x3dpsi=diag_data->sum_x3dpsi[i]/(double)diag_data->num_ents;
-		
-			/* calculate the two different version of the variance */
-			var1=E_x2-E_x*E_x;
-			var2=(E_x3dpsi-3.*E_x*E_x2dpsi+3.*E_x*E_x*E_xdpsi-
-				E_x*E_x*E_x*E_dpsi)/3.;
-			
-			/* calculate Hanson's statistic */
 			diag_data->hanson[i]=var1/var2;
-		
-			/* if converged no more sampling required */
-			if(diag_data->hanson[i] < diag_data->tol_min || 
-				diag_data->hanson[i] > diag_data->tol_max)
-			{
-				diag_data->keep_sampling=1;
-			}	
 		}
+		else
+		{
+			diag_data->hanson[i]=0;
+		}
+	
+		/* if converged no more sampling required */
+		if(diag_data->hanson[i] < diag_data->tol_min || 
+			diag_data->hanson[i] > diag_data->tol_max)
+		{
+			diag_data->keep_sampling=1;
+		}	
 	}	
 }
 
