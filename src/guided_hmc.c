@@ -105,8 +105,8 @@ void run_guided_hmc(int num_dim,double* start_point,
 	
 	printf("\n-------------------------------------------------\n");
 	printf("          Guided Hamiltonian Sampler\n");
-	printf("                Version 2.0c\n");
-	printf("          Last Modified: October 2012\n");
+	printf("                Version 2.5c\n");
+	printf("          Last Modified: March 2013\n");
 	printf("  S. T. Balan, M. A. J. Ashdown & M. P. Hobson\n");
 	printf("     Cavendish Laboratory, Cambridge, UK.\n");
 	printf("-------------------------------------------------\n");
