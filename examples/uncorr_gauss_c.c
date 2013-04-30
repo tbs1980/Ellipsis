@@ -16,6 +16,7 @@
 FILE* test_gauss_outfile;
 
 void write_gauss_ghs_extract(int* ndim,double* x,double* val,double* g);
+void write_gauss_ghs_extract_with_logpostval(int* ndim,double* x,double* logpostval,double* g);
 void nd_uncorr_gauss_neg_log_post(int* ndim,double* x,double* v,double* g);
 
 int main()
@@ -53,7 +54,8 @@ int main()
 	
 	
 	nlp=&nd_uncorr_gauss_neg_log_post;
-	wrt_ext=&write_gauss_ghs_extract;
+	/*wrt_ext=&write_gauss_ghs_extract;*/
+	wrt_ext=&write_gauss_ghs_extract_with_logpostval;
 	
 	scl_fct=1.;
 	fb_int=1000;
@@ -92,6 +94,23 @@ void write_gauss_ghs_extract(int* ndim,double* x,double* val,double* g)
 			fprintf(test_gauss_outfile,"%e,",x[i]);
 		}
 		fprintf(test_gauss_outfile,"%e\n",x[*ndim-1]);
+	}
+	else
+	{
+		printf("\nERROR IN WRITING GHS EXTRACT!\n");
+	}
+}
+
+void write_gauss_ghs_extract_with_logpostval(int* ndim,double* x,double* logpostval,double* g)
+{
+	int i;
+	if(test_gauss_outfile != NULL)
+	{
+		for(i=0;i<*ndim;++i)
+		{
+			fprintf(test_gauss_outfile,"%e,",x[i]);
+		}
+		fprintf(test_gauss_outfile,"%e\n",*logpostval);
 	}
 	else
 	{
