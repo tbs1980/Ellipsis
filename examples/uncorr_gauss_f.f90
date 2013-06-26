@@ -12,6 +12,7 @@ program uncorr_gauss
   integer max_stp
   integer resume
   integer i
+  integer nburn,nsamp
   external nd_uncorr_gauss_neg_log_post
   external write_gauss_ghs_extract
 
@@ -47,6 +48,13 @@ program uncorr_gauss
 
   seed=1234       ! random number generator seed
 
+  nburn=0         ! number of samples to be burned
+
+  nsamp=1000      ! number of samples to be drawn
+                  ! note that if nsamp>0 the sampler will
+                  ! stop after nsamp samples. This doesn't mean that the algorithm
+                  ! has converged. Check the hanson values to be sure.
+
   !
   ! open file for mcmc extract
   ! The accepted samples are written to this file.
@@ -67,7 +75,7 @@ program uncorr_gauss
 
   ! call GHS
   call run_guided_hmc(ndim,st,scl_fct,max_stp,stp_sz,fl_pfx,seed,resume,&
-       fb_int,nd_uncorr_gauss_neg_log_post,write_gauss_ghs_extract);
+       fb_int,nd_uncorr_gauss_neg_log_post,write_gauss_ghs_extract,nburn,nsamp);
 
   ! close file
   close(20)

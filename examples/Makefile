@@ -1,4 +1,4 @@
-BUILD=gnu
+BUILD=intel
 include ../config/Makefile.$(BUILD)
 
 #example programs in C and F90

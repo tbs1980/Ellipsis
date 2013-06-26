@@ -1,4 +1,4 @@
-BUILD=gnu
+BUILD=intel
 include ./config/Makefile.$(BUILD)
 
 vpath %.c src

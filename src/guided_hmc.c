@@ -1,7 +1,7 @@
 /* 
  * File:   guided_hmc.c
  * Author: Sreekumar Balan
- * Email: st452@mrao.cam.ac.uk
+ * Email: tbs1980@gmail.com
  *
  * Created on 26 September 2012
  */
@@ -20,7 +20,8 @@ void run_guided_hmc_(int* num_dim,double* start_point,
 	double* dim_scale_fact,int* max_steps,double* step_sizes,
 	char* file_prefix_f,int* seed,int* resume,int* feedback_int,
 	void (*neg_logpost)(int*,double*,double*,double*),
-	void (*write_extract)(int*,double*,double*,double*) )
+	void (*write_extract)(int*,double*,double*,double*) ,
+	int* nburn,int* nsamp)
 {
 
 	char* file_prefix_c;
@@ -35,7 +36,8 @@ void run_guided_hmc_(int* num_dim,double* start_point,
 
 	/* call the c interface */
 	run_guided_hmc(*num_dim,start_point,*dim_scale_fact,*max_steps,step_sizes,
-	file_prefix_c,*seed,*resume,*feedback_int,neg_logpost,write_extract);
+		file_prefix_c,*seed,*resume,*feedback_int,neg_logpost,write_extract,
+		*nburn,*nsamp);
 
 	
 	free(file_prefix_c);	
@@ -48,7 +50,8 @@ void run_guided_hmc__(int* num_dim,double* start_point,
 	double* dim_scale_fact,int* max_steps,double* step_sizes,
 	char* file_prefix_f,int* seed,int* resume,int* feedback_int,
 	void (*neg_logpost)(int*,double*,double*,double*),
-	void (*write_extract)(int*,double*,double*,double*) )
+	void (*write_extract)(int*,double*,double*,double*) ,
+	int* nburn,int* nsamp)
 {
 
 	char* file_prefix_c;
@@ -63,7 +66,8 @@ void run_guided_hmc__(int* num_dim,double* start_point,
 
 	/* call the c interface */
 	run_guided_hmc(*num_dim,start_point,*dim_scale_fact,*max_steps,step_sizes,
-	file_prefix_c,*seed,*resume,*feedback_int,neg_logpost,write_extract);
+		file_prefix_c,*seed,*resume,*feedback_int,neg_logpost,write_extract,
+		*nburn,*nsamp);
 
 	
 	free(file_prefix_c);	
@@ -77,7 +81,8 @@ void run_guided_hmc(int num_dim,double* start_point,
 	double dim_scale_fact,int max_steps,double* step_sizes,
 	char* file_prefix,int seed,int resume,int feedback_int,
 	void (*neg_logpost)(int*,double*,double*,double*),
-	void (*write_extract)(int*,double*,double*,double*) )
+	void (*write_extract)(int*,double*,double*,double*) ,
+	int nburn,int nsamp)
 {
 
 	int resume_file_update_int;	
@@ -197,12 +202,12 @@ void run_guided_hmc(int num_dim,double* start_point,
 	/* run guided hmc */
 	if(run_ghs)
 	{
-		printf("\nNumber of dimensions in the posterior  = %u\n",num_dim);
-		printf("Number of steps in the HMC             = %u\n",max_steps);
-		printf("Dimensionality scale factor            = %f\n",dim_scale_fact);
+		printf("\nNumber of dimensions in the posterior   = %u\n",num_dim);
+		printf("Number of steps in the HMC              = %u\n",max_steps);
+		printf("Dimensionality scale factor             = %f\n",dim_scale_fact);
 		
 		run_engine=1;
-		count=0;
+		count=hdata->num_ents;/*if resuming count should be equal to num_ents*/
 		iteration=0;
 		
 		count_last_set=0;
@@ -240,11 +245,15 @@ void run_guided_hmc(int num_dim,double* start_point,
 			/* accept / reject */
 			if(-log_ratio > log_uni)
 			{
-				/* calculate diagnostic */
-				push_state(hdata,num_dim,proposal,grad);
+				/*burn the first nburn samples*/
+				if(count >= nburn)
+				{
+					/* calculate diagnostic */
+					push_state(hdata,num_dim,proposal,grad);
 				
-				/* write extract */
-				write_extract(&num_dim,proposal,&log_ratio,grad);
+					/* write extract */
+					write_extract(&num_dim,proposal,&log_ratio,grad);
+				}
 				
 				for(i=0;i<num_dim;++i)
 				{
@@ -257,11 +266,23 @@ void run_guided_hmc(int num_dim,double* start_point,
 				if(feedback_int >0 && count>0 
 					&& count%feedback_int ==0)
 				{
-					printf("\nNumber of samples drawn so far         = %d\n",
-						hdata->num_ents);
-					printf("Acceptance rate (last %d samples)     = %f\n\n",
-						feedback_int,
-						(double)count_last_set/(double)iteration_last_set);
+					/* if we have not passed the nburn, change the message*/
+					if(count <= nburn)
+					{
+						printf("\nNumber of samples BURNED so far         = %d\n",
+							count);
+						printf("Acceptance rate (last %d samples)     = %f\n\n",
+							feedback_int,
+							(double)count_last_set/(double)iteration_last_set);
+					}
+					else
+					{
+						printf("\nNumber of samples DRAWN so far          = %d\n",
+							hdata->num_ents);
+						printf("Acceptance rate (last %d samples)     = %f\n\n",
+							feedback_int,
+							(double)count_last_set/(double)iteration_last_set);
+					}
 						
 					count_last_set=0;
 					iteration_last_set=0;
@@ -276,16 +297,47 @@ void run_guided_hmc(int num_dim,double* start_point,
 					/* write the dianostic file */
 					write_diag_data_to_file(hdata,diag_file_name);
 					
+					/* keep sampling?  only if we need to run till convergence*/
+					if(nsamp==0)
+					{
+						run_engine=hdata->keep_sampling;
+					}					
+				}
+				
+				/* force the sampler to stop if count > nburn+nsamp*/
+				if(nsamp>0 && count >= nburn && count >= (nburn+nsamp))
+				{
+					/* write the RNG state */
+					save_rand_state(rand,rand_file_name);
+					
+					/* write the dianostic file */
+					write_diag_data_to_file(hdata,diag_file_name);
+					
 					/* keep sampling? */
-					run_engine=hdata->keep_sampling;		
+					run_engine=hdata->keep_sampling;
+					
+					run_engine=0;	
 				}
 			}
 		}
-		printf("\nSampling finished!\n");
-		printf("Toal number of samples taken           = %d\n",
-			hdata->num_ents);
-		printf("Net acceptance rate                    = %f\n",
-			(double)count/(double)iteration);
+		
+		/* check if the sampler stopped after hanson's check */
+		if(hdata->keep_sampling)
+		{
+			printf("\nSampling stopped!\n");
+			printf("Toal number of samples taken            = %d\n",
+				hdata->num_ents);
+			printf("Net acceptance rate                     = %f\n",
+				(double)count/(double)iteration);
+		}
+		else
+		{
+			printf("\nSampling finished!\n");
+			printf("Toal number of samples taken            = %d\n",
+				hdata->num_ents);
+			printf("Net acceptance rate                     = %f\n",
+				(double)count/(double)iteration);
+		}
 		
 		free(grad);
 		free(proposal);

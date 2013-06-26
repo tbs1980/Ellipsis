@@ -35,6 +35,13 @@ int main()
 	int resume;
 	char ext_file_name[128];
 	int i;
+	int nburn=5000;
+	int nsamp=1000;
+	/*
+	Note that if nsamp>0, the sampler will be stopped forcefully after nsamp samples
+	have been taken. This does not mean that the algorithm will have converged.
+	Check the Hanson values for convergence.
+	*/
 	
 	printf("\n=================================================\n");
 	printf("|    Example program in C: 1                    |\n");
@@ -75,7 +82,7 @@ int main()
 		test_gauss_outfile=fopen(ext_file_name,"w");
 	}
 
-	run_guided_hmc(ndim,st,scl_fct,max_stp,stp_sz,fl_pfx,seed,resume,fb_int,nlp,wrt_ext);
+	run_guided_hmc(ndim,st,scl_fct,max_stp,stp_sz,fl_pfx,seed,resume,fb_int,nlp,wrt_ext,nburn,nsamp);
 		
 	fclose(test_gauss_outfile);
 	free(st);

@@ -10,9 +10,10 @@ program gauss
   integer fb_int
   integer max_stp
   integer resume
-   logical diag
+  logical diag
   ! intrinsic function trim
   character trim
+  integer nburn,nsamp
 
 
   print*, " "
@@ -44,6 +45,13 @@ program gauss
 
   seed=1234       ! random number generator seed
 
+  nburn=0         ! number of samples to be burned
+
+  nsamp=1000      ! number of samples to be drawn
+                  ! note that if nsamp>0 the sampler will
+                  ! stop after nsamp samples. This doesn't mean that the algorithm
+                  ! has converged. Check the hanson values to be sure.
+
   !
   ! open file for mcmc extract
   ! The accepted samples are written to this file.
@@ -59,7 +67,7 @@ program gauss
 
   ! call GHS
   call run_guided_hmc(ndim,st,scl_fct,max_stp,stp_sz,fl_pfx,seed,resume,&
-       fb_int,negLogPostAndGrad,writeExtract);
+       fb_int,negLogPostAndGrad,writeExtract,nburn,nsamp);
 
   ! close file
   close(gauss_lunExt)
