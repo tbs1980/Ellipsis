@@ -1,17 +1,9 @@
-/* 
- * File:   test_guided_hmc.c
- * Author: Sreekumar Balan
- * Email: st452@mrao.cam.ac.uk
- *
- * Created on 30 September 2012
- */
- 
-#include<stdlib.h>
-#include<string.h>
-#include<stdio.h>
-#include<math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
 
-#include<guided_hmc.h>
+#include <guided_hmc.h>
 
 FILE* test_gauss_outfile;
 
@@ -71,7 +63,7 @@ int main()
 	seed=1234;
 	
 	strcpy(ext_file_name,fl_pfx);
-	strcat(ext_file_name,".extract.txt");
+	strcat(ext_file_name,".extract.dat");
 	
 	if(resume==1)
 	{
@@ -84,7 +76,8 @@ int main()
 
 	run_guided_hmc(ndim,st,scl_fct,max_stp,stp_sz,fl_pfx,seed,resume,fb_int,nlp,wrt_ext,nburn,nsamp);
 		
-	fclose(test_gauss_outfile);
+	if(test_gauss_outfile) fclose(test_gauss_outfile);
+	
 	free(st);
 	free(stp_sz);
 	

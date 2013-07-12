@@ -1,18 +1,12 @@
-/* 
- * File:   guided_hmc.h
- * Author: Sreekumar Balan
- * Email: st452@mrao.cam.ac.uk
- *
- * Created on 26 September 2012
- */
- 
 #ifndef ELLIPSIS_GUIDED_HMC_H
 #define ELLIPSIS_GUIDED_HMC_H
+
+#define GHS_VERSION_MAJOR 2
+#define GHS_VERSION_MINOR 6
  
 #ifdef __cplusplus
 extern "C" {
 #endif
-
  
 void run_guided_hmc(int num_dim,double* start_point,
 	double dim_scale_fact,int max_steps,double* step_sizes,

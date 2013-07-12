@@ -1,18 +1,11 @@
-/* 
- * File:   test_mt19937.c
- * Author: Sreekumar Balan
- * Email: st452@mrao.cam.ac.uk
- *
- * Created on 30 September 2012
- */
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<math.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
 
  
-#include"mt19937.h"
-#include"test_mt19937.h"
+#include "mt19937.h"
+#include "test_mt19937.h"
 
 
 int test_random_uni()
@@ -46,13 +39,11 @@ int test_random_uni()
 	if(fabs(mu - 0.5)>1e-3 || fabs(var-1./12.)>1e-3)
 	{
 		free(rand);
-		return 0;
+		return EXIT_FAILURE;
 	}
-	else
-	{
-		free(rand);
-		return 1;
-	}
+
+	free(rand);
+	return EXIT_SUCCESS;
 }
 
 int test_random_norm()
@@ -85,13 +76,11 @@ int test_random_norm()
 	if(fabs(mu - 0)>1e-3 || fabs(var-1.)>1e-3)
 	{
 		free(rand);
-		return 0;
+		return EXIT_FAILURE;
 	}
-	else
-	{
-		free(rand);
-		return 1;
-	}
+
+	free(rand);
+	return EXIT_SUCCESS;
 }
 
 int test_rand_save_state()
@@ -114,7 +103,7 @@ int test_rand_save_state()
 	}
 
 	/* save the state */
-	save_rand_state(rand,"myrand.txt");	
+	save_rand_state(rand,"myrand.dat");	
 	
 	
 	/* store the 2nd half */
@@ -124,19 +113,19 @@ int test_rand_save_state()
 	}
 	
 	/* read the state */
-	read_rand_state(rand,"myrand.txt");
+	read_rand_state(rand,"myrand.dat");
 
 	
 	/* check if the 2nd half is the same */
 	for(i=0;i<nrand/2;++i)
 	{
 		if(rands[nrand/2+i]!=genrand_uniform(rand))
-			return 0;
+			return EXIT_FAILURE;
 	}
 
 	
 	free(rand);
-	return 1;
+	return EXIT_SUCCESS;
 	
 }
 

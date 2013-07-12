@@ -1,16 +1,8 @@
-/* 
- * File:   test_hanson.c
- * Author: Sreekumar Balan
- * Email: st452@mrao.cam.ac.uk
- *
- * Created on 30 September 2012
- */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-#include"hanson.h"
+#include "hanson.h"
 
 int test_hanson_diag()
 {
@@ -21,7 +13,7 @@ int test_hanson_diag()
 	init_hanson_diag_data(hdata,ndim,0.8,1.2);
 	free_hanson_diag_data(hdata);
 	free(hdata);
-	return 1;
+	return EXIT_SUCCESS;
 }
 
 int test_csv_IO()
@@ -34,7 +26,7 @@ int test_csv_IO()
 	FILE* csvfile;
 	
 	/* write a csv file */
-	csvfile=fopen("csv_file.txt","w");
+	csvfile=fopen("csv_file.dat","w");
 	for(i=0;i<10;++i)
 	{
 		x[i]=(double)i;
@@ -52,7 +44,7 @@ int test_csv_IO()
 	{
 		mat[i]=0;
 	}
-	csvfile=fopen("csv_file.txt","r");
+	csvfile=fopen("csv_file.dat","r");
 	read_csv_file(csvfile,3,10,mat);
 	
 	/* test if they are equal */
@@ -61,13 +53,13 @@ int test_csv_IO()
 		for(j=0;j<10;++j)
 		{
 			if(mat[i*(int)10+j] != (double)j*(i+1) )
-				return 0;
+				return EXIT_FAILURE;
 		}
 	}
 	
 	fclose(csvfile);
 	
 	
-	return 1;
+	return EXIT_SUCCESS;
 }
 

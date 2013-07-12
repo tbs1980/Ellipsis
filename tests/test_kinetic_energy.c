@@ -1,10 +1,10 @@
-#include<stdlib.h>
-#include<string.h>
-#include<stdio.h>
-#include<math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
 
-#include"test_kinetic_energy.h"
-#include"guided_hmc.h"
+#include "test_kinetic_energy.h"
+#include "guided_hmc.h"
 
 int test_kinetic_energy()
 {
@@ -28,13 +28,12 @@ int test_kinetic_energy()
 	if(kin_eng != kin_eng_test)
 	{
 		free(mtm);
-		return 0;
+		return EXIT_FAILURE;
 	}
-	else
-	{
-		free(mtm);
-		return 1;
-	}
+	
+	
+	free(mtm);
+	return EXIT_SUCCESS;
 	
 }
 

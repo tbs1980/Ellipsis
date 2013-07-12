@@ -1,15 +1,7 @@
-/* 
- * File:   hanson.h
- * Author: Sreekumar Balan
- * Email: st452@mrao.cam.ac.uk
- *
- * Created on 30 September 2012
- */
-
 #ifndef ELLIPSIS_HANSON_H
 #define ELLIPSIS_HANSON_H
 
-#include<stdio.h>
+#include <stdio.h>
 
 typedef struct
 {

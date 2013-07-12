@@ -41,10 +41,10 @@
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
-#include<math.h>
-#include<stdio.h>
-#include<stdlib.h>
-#include"mt19937.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "mt19937.h"
 
 /* initializes mt[MT19937_N] with a seed */
 void init_genrand(ellipsis_mt19937_rng* rng,unsigned long s)

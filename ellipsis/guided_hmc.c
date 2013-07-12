@@ -1,19 +1,11 @@
-/* 
- * File:   guided_hmc.c
- * Author: Sreekumar Balan
- * Email: tbs1980@gmail.com
- *
- * Created on 26 September 2012
- */
-
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<math.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
  
-#include"guided_hmc.h"
-#include"mt19937.h"
-#include"hanson.h"
+#include "guided_hmc.h"
+#include "mt19937.h"
+#include "hanson.h"
 
 /*Interface for calling from FORTRAN gnu, intel */
 void run_guided_hmc_(int* num_dim,double* start_point,
@@ -110,8 +102,7 @@ void run_guided_hmc(int num_dim,double* start_point,
 	
 	printf("\n-------------------------------------------------\n");
 	printf("          Guided Hamiltonian Sampler\n");
-	printf("                Version 2.5c\n");
-	printf("          Last Modified: March 2013\n");
+	printf("                Version %d.%d\n",GHS_VERSION_MAJOR,GHS_VERSION_MINOR);
 	printf("  S. T. Balan, M. A. J. Ashdown & M. P. Hobson\n");
 	printf("     Cavendish Laboratory, Cambridge, UK.\n");
 	printf("-------------------------------------------------\n");
@@ -126,9 +117,9 @@ void run_guided_hmc(int num_dim,double* start_point,
 	
 	/* assign the file names */
 	strcpy(diag_file_name,file_prefix);
-	strcat(diag_file_name,".diag.txt");
+	strcat(diag_file_name,".diag.dat");
 	strcpy(rand_file_name,file_prefix);
-	strcat(rand_file_name,".rand.txt");
+	strcat(rand_file_name,".rand.dat");
 	
 	/* are we resuming from pervious state? */
 	if(resume)
@@ -143,9 +134,21 @@ void run_guided_hmc(int num_dim,double* start_point,
 		{
 			printf("No resume files foud...\n");
 			printf("Starting sampling from scratch...\n");
-		
-			/* initialise the random number generator */
-			init_genrand(rand,(unsigned long)seed);				
+			
+			/* see if we can open files for writing */
+			diag_out_file=fopen(diag_file_name,"w");
+			rand_out_file=fopen(rand_file_name,"w");
+			if(diag_out_file == NULL || rand_out_file == NULL)
+			{
+				printf("\nCannot open the diagnostic files for writing!");
+				printf("\nPlease check the file_prefix.\n\n");
+				run_ghs=0;
+			}
+			else
+			{
+				/* initialise the random number generator */
+				init_genrand(rand,(unsigned long)seed);				
+			}		
 		}
 		else
 		{
@@ -342,13 +345,14 @@ void run_guided_hmc(int num_dim,double* start_point,
 		free(grad);
 		free(proposal);
 		free(momentum);
-		free_hanson_diag_data(hdata);
+		/*free_hanson_diag_data(hdata);*/
 	}
 	else
 	{
 		printf("No sampling performed\n\n");
 	}
 	
+	free_hanson_diag_data(hdata);
 	free(rand);
 	free(hdata);
 }

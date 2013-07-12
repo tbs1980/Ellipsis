@@ -18,7 +18,7 @@ program gauss
 
   print*, " "
   print*, "================================================="
-  print*, "|    Example program in F90: 2                  |"
+  print*, "|    Example program in F95: 2                  |"
   print*, "|    Correlated N-D Gaussian                    |"
   print*, "================================================="
 
@@ -59,10 +59,10 @@ program gauss
   ! openf90 gives me an error if recl is not huge
   ! gfortran,intel,sunf90 are fine
   if(resume .eq. 1) then 
-     open(unit=gauss_lunExt,file= (trim(fl_pfx)//".extract.txt"),POSITION='APPEND',&
+     open(unit=gauss_lunExt,file= (trim(fl_pfx)//".extract.dat"),POSITION='APPEND',&
           recl=1500000)
   else
-     open(unit=gauss_lunExt,file= (trim(fl_pfx)//".extract.txt"),recl=1500000)
+     open(unit=gauss_lunExt,file= (trim(fl_pfx)//".extract.dat"),recl=1500000)
   endif
 
   ! call GHS

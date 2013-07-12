@@ -20,7 +20,7 @@ program uncorr_gauss
 
   print*, " "
   print*, "================================================="
-  print*, "|    Example program in F90: 1                  |"
+  print*, "|    Example program in F95: 1                  |"
   print*, "|    Uncorrelated N-D Gaussian                  |"
   print*, "================================================="
 
@@ -67,10 +67,10 @@ program uncorr_gauss
   ! openf90 gives me an error if recl is not huge
   ! gfortran,intel,sunf90 are fine
   if(resume .eq. 1) then
-     open(unit=20,file= (trim(fl_pfx)//".extract.txt"),POSITION='APPEND',&
+     open(unit=20,file= (trim(fl_pfx)//".extract.dat"),POSITION='APPEND',&
           recl=1500000)
   else
-     open(unit=20,file= (trim(fl_pfx)//".extract.txt"),recl=1500000)
+     open(unit=20,file= (trim(fl_pfx)//".extract.dat"),recl=1500000)
   endif
 
   ! call GHS

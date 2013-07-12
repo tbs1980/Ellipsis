@@ -1,18 +1,10 @@
-/* 
- * File:   hanson.c
- * Author: Sreekumar Balan
- * Email: st452@mrao.cam.ac.uk
- *
- * Created on 30 September 2012
- */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include <math.h>
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<assert.h>
-#include<math.h>
-
-#include"hanson.h"
+#include "hanson.h"
 
 void write_csv_file(FILE* outfile,int num_dims,double* vect)
 {
