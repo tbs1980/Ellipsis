@@ -12,17 +12,17 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 #see what compilers are we using
-get_filename_component (C_COMPILER_NAME ${CMAKE_C_COMPILER} NAME)
+#get_filename_component (C_COMPILER_NAME ${CMAKE_C_COMPILER} NAME)
 
-if(NOT CMAKE_COMPILER_IS_GNUCC)
-	if(${CMAKE_C_COMPILER} MATCHES "icc.*$")
-		set(CMAKE_COMPILER_IS_INTELCC true)
-	else(${CMAKE_C_COMPILER} MATCHES "icc.*$")
-		if(NOT FORCE_UNKNOWN_C_COMPILER)
-			message(FATAL_ERROR "Untested C Compiler ${C_COMPILER_NAME}")
-		endif(NOT FORCE_UNKNOWN_C_COMPILER)
-	endif(${CMAKE_C_COMPILER} MATCHES "icc.*$")
-endif(NOT CMAKE_COMPILER_IS_GNUCC)
+#if(NOT CMAKE_COMPILER_IS_GNUCC)
+#	if(${CMAKE_C_COMPILER} MATCHES "icc.*$")
+#		set(CMAKE_COMPILER_IS_INTELCC true)
+#	else(${CMAKE_C_COMPILER} MATCHES "icc.*$")
+#		if(NOT FORCE_UNKNOWN_C_COMPILER)
+#			message(FATAL_ERROR "Untested C Compiler ${C_COMPILER_NAME}")
+#		endif(NOT FORCE_UNKNOWN_C_COMPILER)
+#	endif(${CMAKE_C_COMPILER} MATCHES "icc.*$")
+#endif(NOT CMAKE_COMPILER_IS_GNUCC)
 
 
 include_directories(ellipsis)

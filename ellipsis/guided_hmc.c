@@ -242,8 +242,9 @@ void run_guided_hmc(int num_dim,double* start_point,
 			log_ratio=log_uni;
 			
 			/* evolve the sample in phase space */
+			double log_lik=0;
 			leapfrog(num_dim,proposal,grad,momentum,num_steps,
-				epsilon,step_sizes,&log_ratio,neg_logpost);
+				epsilon,step_sizes,&log_ratio,neg_logpost,&log_lik);
 				
 			/* accept / reject */
 			if(-log_ratio > log_uni)
@@ -255,7 +256,7 @@ void run_guided_hmc(int num_dim,double* start_point,
 					push_state(hdata,num_dim,proposal,grad);
 				
 					/* write extract */
-					write_extract(&num_dim,proposal,&log_ratio,grad);
+					write_extract(&num_dim,proposal,&log_lik,grad);
 				}
 				
 				for(i=0;i<num_dim;++i)
@@ -359,7 +360,7 @@ void run_guided_hmc(int num_dim,double* start_point,
 
 void leapfrog(int num_dim,double* x,double *g,double *p,
 	int num_steps,double epsilon,double* sigma,double *log_ratio,
-	void (*neg_logpost)(int*,double*,double*,double*))
+	void (*neg_logpost)(int*,double*,double*,double*),double* llik)
 {
 	double ke,pe,h0,h1,dh;
 	int i,j;
@@ -403,6 +404,7 @@ void leapfrog(int num_dim,double* x,double *g,double *p,
 	/* if the break condition did not occur */
 	/* log_ratio should be the dh at the end of the loop */
 	*log_ratio=dh;
+	*llik=-pe;
 }
 
 void kinetic_energy(int num_dim,double* p,double* ke)
