@@ -1,7 +1,7 @@
 # Guided Hamiltonian Sampler
 
 
-## Contributers 
+## Contributors
 
 0. Sreekumar Thaithara Balan (tbs1980@gmail.com)
 1. Michael Hobson (mph@mrao.cam.ac.uk)
@@ -12,7 +12,7 @@
 We need CMake to compile the files. Using git clone the repository
 
 	$ git clone https://github.com/tbs1980/Ellipsis.git
-	
+
 Then move to the directory `Ellipsis` and follow the instructions below.
 
 	$ cd Ellipsis
@@ -20,7 +20,7 @@ Then move to the directory `Ellipsis` and follow the instructions below.
 	$ cd build
 	$ cmake ../
 	$ make
-	
+
 The library `libellipsis.a` will be in the directory `ellipsis` and the examples
 can be found in `examples`.
 
@@ -32,7 +32,7 @@ can be found in `examples`.
 	-rw-rw-r-- 1 sbalan sbalan  1171 Jul  1 12:06 cmake_install.cmake
 	-rw-rw-r-- 1 sbalan sbalan 26830 Jul  1 12:06 libellipsis.a
 	-rw-rw-r-- 1 sbalan sbalan  7604 Jul  1 12:06 Makefile
-	
+
 	$ ls -la examples
 	drwxrwxr-x 3 sbalan sbalan  4096 Jul  1 12:06 .
 	drwxrwxr-x 5 sbalan sbalan   115 Jul  1 12:06 ..
@@ -45,4 +45,6 @@ can be found in `examples`.
 	-rwxrwxr-x 1 sbalan sbalan 25096 Jul  1 12:06 uncorr_gauss_c.exe
 	-rwxrwxr-x 1 sbalan sbalan 27017 Jul  1 12:06 uncorr_gauss_f.exe
 
+## LICENSE
 
+The code is distributed under [MPL2](https://www.mozilla.org/MPL/2.0/)
