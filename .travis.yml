@@ -9,7 +9,8 @@ before_install:
 before_script:
     - mkdir build
     - cd build
-    - cmake ../CMakeLists.txt
+    - pwd
+    - cmake ..
 
 script:
     - $CC --version
