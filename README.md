@@ -1,11 +1,12 @@
 # Guided Hamiltonian Sampler
 
+[![Build Status](https://travis-ci.org/tbs1980/Ellipsis.svg?branch=master)](https://travis-ci.org/tbs1980/Ellipsis)
 
 ## Contributors
 
-0. Sreekumar Thaithara Balan (tbs1980@gmail.com)
-1. Michael Hobson (mph@mrao.cam.ac.uk)
-2. Mark Ashdown (maja1.mrao.cam.ac.uk)
+0. [Sreekumar Thaithara Balan](mailto:sbalan@star.ucl.ac.uk)
+1. [Michael Hobson](mailto:mph@mrao.cam.ac.uk)
+2. [Mark Ashdown](mailto:maja1.mrao.cam.ac.uk)
 
 ## Compilation
 
