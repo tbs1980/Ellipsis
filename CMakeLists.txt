@@ -27,7 +27,7 @@ endif()
 
 include_directories(ellipsis)
 add_subdirectory(ellipsis)
-#add_subdirectory(examples)
+add_subdirectory(examples)
 if(ENABLE_TESTING)
 	add_subdirectory(tests)
 endif(ENABLE_TESTING)
