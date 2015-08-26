@@ -6,7 +6,10 @@ compiler:
 before_install:
     - echo $LANG
 
-before_script: cmake CMakeLists.txt
+before_script:
+    - mkdir build
+    - cd build
+    - cmake ../CMakeLists.txt
 
 script:
     - $CC --version
