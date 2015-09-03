@@ -17,3 +17,6 @@ before_script:
 script:
     - $CC --version
     - make
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
