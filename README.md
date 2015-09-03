@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/tbs1980/Ellipsis.svg?branch=master)](https://travis-ci.org/tbs1980/Ellipsis)
 [![codecov.io](http://codecov.io/github/tbs1980/Ellipsis/coverage.svg?branch=master)](http://codecov.io/github/tbs1980/Ellipsis?branch=master)
 
+## Authors
+
 0. [Sreekumar Thaithara Balan](mailto:sbalan@star.ucl.ac.uk)
 1. [Michael Hobson](mailto:mph@mrao.cam.ac.uk)
 2. [Mark Ashdown](mailto:maja1.mrao.cam.ac.uk)
