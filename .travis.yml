@@ -16,7 +16,6 @@ before_script:
 
 script:
     - $CC --version
-    - $CXX --version
     - make
 
 after_success:
